@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>AOLT – Live Progress</title>
+  <style>
+    body { font-family: system-ui, sans-serif; max-width: 900px; margin: 24px auto; padding: 0 16px; }
+    .card { border: 1px solid #ddd; border-radius: 12px; padding: 16px; }
+    h1 { margin: 0 0 8px; }
+    .muted { opacity: .7; }
+    ul { margin: 8px 0 0; }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <h1 id="title">Lade…</h1>
+    <div id="line1"></div>
+    <div id="line2"></div>
+    <div class="muted" id="updated"></div>
+    <h3>Fehlende Items</h3>
+    <ul id="items"></ul>
+  </div>
+
+  <script>
+    async function load() {
+      const r = await fetch("./challenge_state.json?ts=" + Date.now(), { cache: "no-store" });
+      const j = await r.json();
+
+      document.getElementById("title").textContent = j.title;
+      document.getElementById("line1").textContent = `Tag ${j.day} • Aktive LootTable: ${j.activeTable}`;
+      document.getElementById("line2").textContent = `Fehlend: ${j.missingCount}`;
+      document.getElementById("updated").textContent = `Letztes Update: ${j.updatedAt}`;
+
+      const ul = document.getElementById("items");
+      ul.innerHTML = "";
+      (j.missingItems || []).forEach(x => {
+        const li = document.createElement("li");
+        li.textContent = x;
+        ul.appendChild(li);
+      });
+    }
+
+    load();
+    setInterval(load, 15000);
+  </script>
+</body>
+</html>
