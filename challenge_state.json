@@ -1,0 +1,8 @@
+{
+  "title": "ALL & ONLY: LootTables",
+  "day": 17,
+  "activeTable": "Pillager Outpost",
+  "missingCount": 3,
+  "missingItems": ["Sentry Trim", "Item X", "Item Y"],
+  "updatedAt": "2026-01-12 16:00"
+}
