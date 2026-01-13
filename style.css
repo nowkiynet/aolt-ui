@@ -1,0 +1,9 @@
+html, body { height: 100%; margin: 0; background: #0b0b0b; }
+#wrap { height: 100%; display: grid; place-items: center; gap: 12px; }
+#ui {
+  image-rendering: pixelated;
+  image-rendering: crisp-edges;
+  border-radius: 10px;
+  box-shadow: 0 10px 40px rgba(0,0,0,.55);
+}
+#hint { color: #aaa; font: 12px system-ui, sans-serif; opacity: .85; }
