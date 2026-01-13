@@ -1,8 +1,15 @@
 {
   "title": "ALL & ONLY: LootTables",
   "day": 17,
-  "activeTable": "Pillager Outpost",
-  "missingCount": 3,
-  "missingItems": ["Sentry Trim", "Item X", "Item Y"],
+  "activeChallengeId": "chests/pillager_outpost",
+  "panels": [
+    {
+      "tableId": "chests/pillager_outpost",
+      "items": [
+        {"id":"minecraft:iron_ingot","required":3,"have":1,"chance":25},
+        {"id":"minecraft:sentry_armor_trim_smithing_template","required":1,"have":0,"chance":25,"glint":false}
+      ]
+    }
+  ],
   "updatedAt": "2026-01-12 16:00"
 }
