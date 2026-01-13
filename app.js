@@ -56,7 +56,7 @@
     window: "./assets/ui/window.png",
     slot: "./assets/ui/slot.png",
     confirm: "./assets/ui/confirm.png",
-    bgDefault: "./assets/bg/deepslate_tiles.png",
+    bgDefault: "./assets/ui/bg_deepslate.png",
     // optional: tab sprites if you have them
     // tab_above_left: ...
   };
