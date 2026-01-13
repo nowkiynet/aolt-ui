@@ -1,1 +1,22 @@
-
+{
+  "categories": ["ARCHAEOLOGY","INTERACTION","GENERATED_LOOT","MONSTER","FISHING","GIFTS","PIGLIN_BARTERING"],
+  "challenges": [
+    {
+      "id": "allloottables:chests/pillager_outpost",
+      "category": "GENERATED_LOOT",
+      "title": "Pillager Outpost",
+      "description": "Loot the outpost chest.",
+      "iconUrl": "./assets/icons/challenges/chest.png",
+      "items": [
+        {
+          "key": "minecraft:sentry_armor_trim|none|false|minecraft:chests/pillager_outpost",
+          "displayName": "Sentry Trim",
+          "lootTableId": "minecraft:chests/pillager_outpost",
+          "required": 1,
+          "chance": 25,
+          "iconUrl": "./assets/icons/items/sentry_trim.png"
+        }
+      ]
+    }
+  ]
+}
