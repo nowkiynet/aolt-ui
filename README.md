@@ -1,0 +1,7 @@
+<div id="hint" style="text-align: center; font-family: sans-serif; font-size: 11px; line-height: 1.4; color: #aaa; margin-top: 10px; max-width: 500px; margin-left: auto; margin-right: auto;">
+      <strong>NOT AN OFFICIAL MINECRAFT PRODUCT. NOT APPROVED BY OR ASSOCIATED WITH MOJANG OR MICROSOFT.</strong>
+      <br>
+      Assets via <a href="https://github.com/PrismarineJS/minecraft-assets" target="_blank" style="color: #888;">PrismarineJS</a> &amp; 
+      <a href="https://minecraft.wiki/" target="_blank" style="color: #888;">Minecraft Wiki</a> (<a href="https://creativecommons.org/licenses/by-nc-sa/3.0/" target="_blank" style="color: #888;">CC BY-NC-SA 3.0</a>). 
+      Minecraft-Inhalte &copy; Mojang AB.
+    </div>
