@@ -6,4 +6,8 @@ html, body { height: 100%; margin: 0; background: #0b0b0b; }
   border-radius: 10px;
   box-shadow: 0 10px 40px rgba(0,0,0,.55);
 }
+canvas#ui {
+  image-rendering: pixelated;
+  image-rendering: crisp-edges;
+}
 #hint { color: #aaa; font: 12px system-ui, sans-serif; opacity: .85; }
