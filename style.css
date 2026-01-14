@@ -5,6 +5,7 @@ html, body { height: 100%; margin: 0; background: #0b0b0b; }
   image-rendering: crisp-edges;
   border-radius: 10px;
   box-shadow: 0 10px 40px rgba(0,0,0,.55);
+  touch-action: none
 }
 #hint { color: #aaa; font: 12px system-ui, sans-serif; opacity: .85; text-align: center; padding: 0 10px; }
 
