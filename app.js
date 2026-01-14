@@ -776,25 +776,31 @@
     ensureIconsLoaded(getVisibleChallengeIconUrls());
   }
 
-  function hitTestWidget(localX, localY) {
-    if (!ui.selectedTab) return null;
-    const k = Math.floor(ui.overview.scrollX);
-    const l = Math.floor(ui.overview.scrollY);
-    const challenges = ui.selectedTab.challenges;
+function hitTestWidget(localX, localY) {
+  // Check, ob Maus im Innenfenster
+  if (localX < 0 || localX > INSIDE_W || localY < 0 || localY > INSIDE_H) return null;
 
-    for (let i = 0; i < challenges.length; i++) {
-      const ch = challenges[i];
-      const col = i % GRID_COLS;
-      const row = Math.floor(i / GRID_COLS);
-      const x = k + col * WIDGET_STEP_X;
-      const y = l + row * WIDGET_STEP_Y;
+  if (!ui.selectedTab) return null;
+  const k = Math.floor(ui.overview.scrollX);
+  const l = Math.floor(ui.overview.scrollY);
+  const challenges = ui.selectedTab.challenges;
 
-      if (localX >= x && localX <= x + WIDGET_W && localY >= y && localY <= y + WIDGET_W) {
+  for (let i = 0; i < challenges.length; i++) {
+    const ch = challenges[i];
+    const col = i % GRID_COLS;
+    const row = Math.floor(i / GRID_COLS);
+    const x = k + col * WIDGET_STEP_X;
+    const y = l + row * WIDGET_STEP_Y;
+
+    if (localX >= x && localX <= x + WIDGET_W && localY >= y && localY <= y + WIDGET_W) {
+      // Nur zurückgeben, wenn das Widget tatsächlich im sichtbaren Bereich liegt
+      if (x + WIDGET_W > 0 && x < INSIDE_W && y + WIDGET_W > 0 && y < INSIDE_H) {
         return { challenge: ch, screenX: x, screenY: y };
       }
     }
-    return null;
   }
+  return null;
+}
 
   // =========================
   // 13) Detail view
@@ -902,36 +908,41 @@
   }
 
   function hitTestDetailSlot(mouseX, mouseY) {
-    const ch = getChallengeById(ui.detailChallengeId);
-    if (!ch) return null;
+  // Zuerst prüfen: Ist die Maus überhaupt im sichtbaren Innenbereich?
+  if (mouseX < 0 || mouseX > INSIDE_W || mouseY < 0 || mouseY > INSIDE_H) return null;
 
-    const panels = buildLootPanels(ch.items);
-    let cursorY = 4 + Math.floor(ui.detailScrollY);
+  const ch = getChallengeById(ui.detailChallengeId);
+  if (!ch) return null;
 
-    for (const p of panels) {
-      const panelW = PANEL_COLS * SLOT_SIZE + PANEL_PADDING * 2;
-      const panelX = Math.floor((INSIDE_W - panelW) / 2);
-      const panelY = cursorY;
+  const panels = buildLootPanels(ch.items);
+  let cursorY = 4 + Math.floor(ui.detailScrollY);
 
-      const slotsOX = panelX + PANEL_PADDING;
-      const slotsOY = panelY + PANEL_HEADER_H + PANEL_PADDING;
+  for (const p of panels) {
+    const panelW = PANEL_COLS * SLOT_SIZE + PANEL_PADDING * 2;
+    const panelX = Math.floor((INSIDE_W - panelW) / 2);
+    const panelY = cursorY;
 
-      for (let i = 0; i < p.items.length; i++) {
-        const it = p.items[i];
-        const col = i % PANEL_COLS;
-        const row = Math.floor(i / PANEL_COLS);
-        const sx = slotsOX + col * SLOT_SIZE;
-        const sy = slotsOY + row * SLOT_SIZE;
+    const slotsOX = panelX + PANEL_PADDING;
+    const slotsOY = panelY + PANEL_HEADER_H + PANEL_PADDING;
 
-        if (mouseX >= sx && mouseX < sx + 16 && mouseY >= sy && mouseY < sy + 16) {
+    for (let i = 0; i < p.items.length; i++) {
+      const it = p.items[i];
+      const col = i % PANEL_COLS;
+      const row = Math.floor(i / PANEL_COLS);
+      const sx = slotsOX + col * SLOT_SIZE;
+      const sy = slotsOY + row * SLOT_SIZE;
+
+      // Die entscheidende Änderung: Nur Treffer zählen, wenn sy (Y-Position) im Viewport ist
+      if (mouseX >= sx && mouseX < sx + 16 && mouseY >= sy && mouseY < sy + 16) {
+        if (sy >= 0 && sy + 16 <= INSIDE_H) { // Prüft, ob der Slot sichtbar ist
           return { item: it, tableId: p.tableId, sx, sy, challenge: ch };
         }
       }
-
-      cursorY += p.height + PANEL_SPACING;
     }
-    return null;
+    cursorY += p.height + PANEL_SPACING;
   }
+  return null;
+}
 
   // =========================
   // 14) Tooltips (GLOBAL, nicht geclippt)
