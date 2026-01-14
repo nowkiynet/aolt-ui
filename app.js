@@ -716,6 +716,83 @@
     ui.overview.centered = true;
   }
 
+function updateTouch(e) {
+  if (e.touches.length > 0) {
+    const touch = e.touches[0];
+    const rect = canvas.getBoundingClientRect();
+    const sx = CANVAS_W / rect.width;
+    const sy = CANVAS_H / rect.height;
+
+    lastMouse.x = (touch.clientX - rect.left) * sx;
+    lastMouse.y = (touch.clientY - rect.top) * sy;
+  }
+}
+
+// Touch-Start (entspricht Mousedown)
+canvas.addEventListener("touchstart", (e) => {
+  updateTouch(e);
+  
+  // Wir simulieren einen Linksklick (Button 0)
+  const fakeEvent = { button: 0, clientX: e.touches[0].clientX, clientY: e.touches[0].clientY, preventDefault: () => e.preventDefault() };
+  
+  // Tab-Logik prüfen
+  const t = hitTestTab(lastMouse.x, lastMouse.y);
+  if (t) {
+    ui.selectedTab = t;
+    ui.detailChallengeId = null;
+    ui.overview.centered = false;
+    ensureIconsLoaded(getChallengeIconUrlsForTab(ui.selectedTab));
+  } else if (isOverBackButton(lastMouse.x, lastMouse.y)) {
+    ui.detailChallengeId = null;
+    ui.detailScrollY = 0;
+  } else {
+    // Scrollen/Draggen einleiten
+    ui.isDragging = true;
+    ui.dragLast = { x: lastMouse.x, y: lastMouse.y };
+    
+    // Detail-Ansicht öffnen, falls ein Widget getroffen wurde
+    if (!ui.detailChallengeId) {
+      const local = getMouseLocal();
+      const hit = hitTestWidget(local.x, local.y);
+      if (hit) {
+        ui.detailChallengeId = hit.challenge.id;
+        ui.detailScrollY = 0;
+        ensureIconsLoaded(getItemIconUrlsForDetail(ui.detailChallengeId));
+      }
+    }
+  }
+  e.preventDefault(); // Verhindert Browser-Scrolling
+}, { passive: false });
+
+// Touch-Move (entspricht Mousemove)
+canvas.addEventListener("touchmove", (e) => {
+  if (!ui.isDragging) return;
+  
+  const oldX = lastMouse.x;
+  const oldY = lastMouse.y;
+  updateTouch(e);
+  
+  const dx = lastMouse.x - oldX;
+  const dy = lastMouse.y - oldY;
+
+  if (ui.detailChallengeId) {
+    scrollDetail(dy);
+  } else {
+    const w = ui.overview.maxX - ui.overview.minX;
+    const h = ui.overview.maxY - ui.overview.minY;
+    if (w > INSIDE_W) ui.overview.scrollX = clamp(ui.overview.scrollX + dx, -(w - INSIDE_W), 0);
+    if (h > INSIDE_H) ui.overview.scrollY = clamp(ui.overview.scrollY + dy, -(h - INSIDE_H), 0);
+  }
+  
+  e.preventDefault();
+}, { passive: false });
+
+// Touch-End
+canvas.addEventListener("touchend", () => {
+  ui.isDragging = false;
+  ui.dragLast = null;
+});
+
   // =========================
   // 12) Overview draw
   // =========================
